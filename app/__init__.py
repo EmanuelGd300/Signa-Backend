@@ -6,7 +6,7 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, origins=['*'])
     
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///marcas.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -15,5 +15,9 @@ def create_app():
     
     from app.routes.marcas import marcas_bp
     app.register_blueprint(marcas_bp, url_prefix='/api')
+    
+    @app.route('/')
+    def home():
+        return {'message': 'API de Marcas funcionando', 'endpoints': ['/api/marcas', '/api/health']}
     
     return app
