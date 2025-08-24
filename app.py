@@ -80,6 +80,19 @@ def get_marca(marca_id):
 def create_marca():
     try:
         data = request.get_json()
+        print(f"Datos recibidos: {data}")
+        
+        if not data:
+            return jsonify({'error': 'No se recibieron datos'}), 400
+        
+        if not data.get('nombre'):
+            return jsonify({'error': 'El nombre es requerido'}), 400
+        if not data.get('descripcion'):
+            return jsonify({'error': 'La descripción es requerida'}), 400
+        if not data.get('categoria'):
+            return jsonify({'error': 'La categoría es requerida'}), 400
+        if not data.get('propietario'):
+            return jsonify({'error': 'El propietario es requerido'}), 400
         
         marca = Marca(
             nombre=data['nombre'].strip(),
@@ -91,9 +104,11 @@ def create_marca():
         db.session.add(marca)
         db.session.commit()
         
+        print(f"Marca creada: {marca.to_dict()}")
         return jsonify(marca.to_dict()), 201
     
     except Exception as e:
+        print(f"Error al crear marca: {str(e)}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
